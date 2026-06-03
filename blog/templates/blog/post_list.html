@@ -8,6 +8,10 @@
             </div>
             <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
             <p>{{ post.text|linebreaksbr }}</p>
+            <!-- intruder image -->
+            {% if post.image %}
+                <img src="{{ post.image.url }}" class="rounded intruder-image-list" alt="{{ post.title }}">
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock %}
