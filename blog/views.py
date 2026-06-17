@@ -43,3 +43,20 @@ def post_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
+
+
+# ===== Django REST framework (ch18) =====
+from rest_framework import viewsets
+from django.contrib.auth import get_user_model
+from .serializers import PostSerializer
+
+
+class IntruderImage(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    # 우리 Post는 author가 필수인데 serializer엔 author가 없어서,
+    # API 생성 시 author를 자동으로 채워줌 (없으면 NOT NULL 에러)
+    def perform_create(self, serializer):
+        User = get_user_model()
+        serializer.save(author=User.objects.order_by('id').first())
